@@ -10,20 +10,6 @@ import (
 	"time"
 )
 
-func soapCallHandleResponse(ws, action string, par string, result interface{}) error {
-	body, err := ClientSOAPCall(ws, action, par)
-	if err != nil {
-		return err
-	}
-
-	err = xml.Unmarshal(body, &result)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func ClientSOAPCall(ws, action string, ci string) ([]byte, error) {
 	header := `<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
 	<Body>
@@ -68,49 +54,49 @@ func ClientSOAPCall(ws, action string, ci string) ([]byte, error) {
 
 /****/
 
+// ClientResponse respuesta del client
 type ClientResponse struct {
-	XMLName xml.Name     `xml:"Envelope"`
-	Body    BodyResponse `xml:"Body"`
-}
-type HeaderResponse struct {
-}
-type BodyResponse struct {
-	XMLName     xml.Name
-	GetResponse []Response `xml:"ZFM_WS_CONSULTACLIENTEResponse"`
-}
-type Response struct {
-	OUTPUT ItemBody `xml:"OUTPUT"`
-}
-type ItemBody struct {
-	Item itemStok `xml:"item"`
-}
-type itemStok struct {
-	KTOKD string `xml:"KTOKD"`
-	VKORG string `xml:"VKORG"`
-	VTWEG string `xml:"VTWEG"`
-
-	BZIRK string `xml:"BZIRK"`
-	KDGRP string `xml:"KDGRP"`
-	SPART string `xml:"SPART"`
-
-	KUNNR     string `xml:"KUNNR"`
-	ANRED     string `xml:"ANRED"`
-	NAME1     string `xml:"NAME1"`
-	MCOD3     string `xml:"MCOD3"`
-	LAND1     string `xml:"LAND1"`
-	LZONE     string `xml:"LZONE"`
-	TELF1     string `xml:"TELF1"`
-	TELF2     string `xml:"TELF2"`
-	SMTP_ADDR string `xml:"SMTP_ADDR"`
-	TELFX     string `xml:"TELFX"`
-	STCD1     string `xml:"STCD1"`
-	STCDT     string `xml:"STCDT"`
-	FITYP     string `xml:"FITYP"`
-	ZTERM     string `xml:"ZTERM"`
-	PARVW     string `xml:"PARVW"`
-	KUNN2     string `xml:"KUNN2"`
-	VTEXT     string `xml:"VTEXT"`
-	NAME2     string `xml:"NAME2"`
-	ERNAM     string `xml:"ERNAM"`
-	ERDAT     string `xml:"ERDAT"`
+	XMLName xml.Name `xml:"Envelope"`
+	Text    string   `xml:",chardata"`
+	SoapEnv string   `xml:"soap-env,attr"`
+	Header  string   `xml:"Header"`
+	Body    struct {
+		Text                         string `xml:",chardata"`
+		ZFMWSCONSULTACLIENTEResponse struct {
+			Text   string `xml:",chardata"`
+			N0     string `xml:"n0,attr"`
+			OUTPUT struct {
+				Text string `xml:",chardata"`
+				Item []struct {
+					Text     string `xml:",chardata"`
+					KTOKD    string `xml:"KTOKD"`
+					VKORG    string `xml:"VKORG"`
+					VTWEG    string `xml:"VTWEG"`
+					BZIRK    string `xml:"BZIRK"`
+					KDGRP    string `xml:"KDGRP"`
+					SPART    string `xml:"SPART"`
+					KUNNR    string `xml:"KUNNR"`
+					ANRED    string `xml:"ANRED"`
+					NAME1    string `xml:"NAME1"`
+					MCOD3    string `xml:"MCOD3"`
+					LAND1    string `xml:"LAND1"`
+					LZONE    string `xml:"LZONE"`
+					TELF1    string `xml:"TELF1"`
+					TELF2    string `xml:"TELF2"`
+					SMTPADDR string `xml:"SMTP_ADDR"`
+					TELFX    string `xml:"TELFX"`
+					STCD1    string `xml:"STCD1"`
+					STCDT    string `xml:"STCDT"`
+					FITYP    string `xml:"FITYP"`
+					ZTERM    string `xml:"ZTERM"`
+					PARVW    string `xml:"PARVW"`
+					KUNN2    string `xml:"KUNN2"`
+					VTEXT    string `xml:"VTEXT"`
+					NAME2    string `xml:"NAME2"`
+					ERNAM    string `xml:"ERNAM"`
+					ERDAT    string `xml:"ERDAT"`
+				} `xml:"item"`
+			} `xml:"OUTPUT"`
+		} `xml:"ZFM_WS_CONSULTACLIENTEResponse"`
+	} `xml:"Body"`
 }

@@ -1,4 +1,4 @@
-package pedido
+package soapchaide
 
 import (
 	"bytes"
@@ -11,13 +11,13 @@ import (
 )
 
 type PedidoRequest struct {
-	XMLName   xml.Name `xml:"soapenv:Envelope"`
-	XMLNsSoap string   `xml:"xmlns:soapenv,attr"`
-	XMLNsUrn  string   `xml:"xmlns:urn,attr"`
-	Body      soapBody `xml:"soapenv:Body"`
+	XMLName   xml.Name       `xml:"soapenv:Envelope"`
+	XMLNsSoap string         `xml:"xmlns:soapenv,attr"`
+	XMLNsUrn  string         `xml:"xmlns:urn,attr"`
+	Body      soapPedidoBody `xml:"soapenv:Body"`
 }
 
-type soapBody struct {
+type soapPedidoBody struct {
 	Zsdb2Creaped Pedido `xml:"urn:Zsdb2Creaped"`
 }
 
@@ -35,6 +35,7 @@ type Pedido struct {
 	Zterm     string      `xml:"Zterm"`
 	Zsdb2Item itemsPedido `xml:"Zsdb2Item"`
 }
+
 type itemsPedido struct {
 	Zsdb2Item []subItem `xml:"item"`
 }
@@ -50,25 +51,12 @@ type subItem struct {
 	Abgru  string `xml:"Abgru"`
 }
 
-func soapCallHandleResponse(ws string, action string, par Pedido, result interface{}) error {
-	body, err := PedidoRequest(ws, action, par)
-	if err != nil {
-		return err
-	}
-
-	err = xml.Unmarshal(body, &result)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
+//PedidoSOAPCall llamado a servicio de crear pedido
 func PedidoSOAPCall(ws string, action string, par Pedido) ([]byte, error) {
-	v := soapPedidoRQ{
+	v := PedidoRequest{
 		XMLNsSoap: "http://schemas.xmlsoap.org/soap/envelope/",
 		XMLNsUrn:  "urn:sap-com:document:sap:soap:functions:mc-style",
-		Body: soapBody{
+		Body: soapPedidoBody{
 			Zsdb2Creaped: par,
 		},
 	}
@@ -146,6 +134,7 @@ type PedidoItem struct {
 	Abgru  string `xml:"Abgru"`
 }
 
+/*
 func main() {
 	ws := "http://srv-hcq-a-qa.industria.chaide.com:1080/sap/bc/srt/rfc/sap/zwssdb2bcreaped/300/zwssdb2bcreaped/zwssdb2bcreaped"
 	action := "urn:sap-com:document:sap:soap:functions:mc-style:ZWSSDB2BCREAPED:Zsdb2CreapedRequest"
@@ -198,3 +187,4 @@ func main() {
 	fmt.Println(res.Body.Zsdb2CreapedResponse)
 
 }
+*/
