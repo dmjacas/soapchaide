@@ -38,48 +38,7 @@ func GetClientInfo(ws, action, ci string) (*ClientResponse, error) {
 }
 
 //CreateOrder create order
-func CreateOrder(ws, action string) (*PedidoResponse, error) {
-
-	items1 := subItem{
-		Mandt:  "300",
-		Posnr:  "1",
-		Matnr:  "20001679",
-		Kwmeng: "1",
-		Pstyv:  "TAN",
-		Kunnr:  "0005000020",
-		Etdat:  "10102019",
-		Kwert:  "",
-		Abgru:  "",
-	}
-	items2 := subItem{
-		Mandt:  "300",
-		Posnr:  "1",
-		Matnr:  "20001679",
-		Kwmeng: "1",
-		Pstyv:  "TAN",
-		Kunnr:  "0005000020",
-		Etdat:  "10102019",
-		Kwert:  "",
-		Abgru:  "",
-	}
-	subItems := []subItem{items1, items2}
-
-	Zsdb2Item := itemsPedido{Zsdb2Item: subItems}
-	data := Pedido{
-		Auart:     "ZTA1",
-		Augru:     "001",
-		Erdat:     "10102019",
-		Kunnr:     "0005000020",
-		Kunnr1:    "0005000020",
-		PurchNoC:  "",
-		PurchNoS:  "",
-		Spart:     "00",
-		Vkogr:     "1000",
-		Vtweg:     "03",
-		Zterm:     "DT02",
-		Zsdb2Item: Zsdb2Item,
-	}
-
+func CreateOrder(ws string, action string, data Zsdb2Creaped) (*PedidoResponse, error) {
 	Soap, _ := PedidoSOAPCall(ws, action, data)
 	res := &PedidoResponse{}
 	err := xml.Unmarshal(Soap, res)
@@ -87,4 +46,17 @@ func CreateOrder(ws, action string) (*PedidoResponse, error) {
 		fmt.Println(err)
 	}
 	return res, err
+}
+
+//CreateClient create client
+func CreateClient(ws string, action string, ci Zsdb2cCreaclie) (*CreateClientResponse, error) {
+
+	Soap, _ := CreateClientSOAP(ws, action, ci)
+
+	res := &CreateClientResponse{}
+	err := xml.Unmarshal(Soap, res)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return res, nil
 }

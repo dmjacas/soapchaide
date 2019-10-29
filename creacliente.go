@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -628,8 +627,6 @@ func CreateClientSOAP(ws string, action string, data Zsdb2cCreaclie) ([]byte, er
 			},
 		},
 	}
-	//fmt.Println(string(payload))
-	///	return nil, nil
 
 	req, err := http.NewRequest("POST", ws, bytes.NewBuffer(payload))
 	if err != nil {
@@ -646,7 +643,6 @@ func CreateClientSOAP(ws string, action string, data Zsdb2cCreaclie) ([]byte, er
 	}
 
 	bodyBytes, err := ioutil.ReadAll(response.Body)
-	fmt.Println(string(bodyBytes))
 	if err != nil {
 		return nil, err
 	}
@@ -654,34 +650,386 @@ func CreateClientSOAP(ws string, action string, data Zsdb2cCreaclie) ([]byte, er
 	return bodyBytes, nil
 }
 
-/****/
+//CreateClientResponse response
+type CreateClientResponse struct {
+	XMLName xml.Name `xml:"Envelope"`
+	Text    string   `xml:",chardata"`
+	SoapEnv string   `xml:"soap-env,attr"`
+	Header  string   `xml:"Header"`
+	Body    struct {
+		Text                   string `xml:",chardata"`
+		Zsdb2cCreaclieResponse struct {
+			Text       string `xml:",chardata"`
+			N0         string `xml:"n0,attr"`
+			Customerno string `xml:"Customerno"`
+			Return     struct {
+				Text      string `xml:",chardata"`
+				Type      string `xml:"Type"`
+				ID        string `xml:"Id"`
+				Number    string `xml:"Number"`
+				Message   string `xml:"Message"`
+				LogNo     string `xml:"LogNo"`
+				LogMsgNo  string `xml:"LogMsgNo"`
+				MessageV1 string `xml:"MessageV1"`
+				MessageV2 string `xml:"MessageV2"`
+				MessageV3 string `xml:"MessageV3"`
+				MessageV4 string `xml:"MessageV4"`
+			} `xml:"Return"`
+			TXknb5 struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Bukrs string `xml:"Bukrs"`
+					Maber string `xml:"Maber"`
+					Mahna string `xml:"Mahna"`
+					Mansp string `xml:"Mansp"`
+					Madat string `xml:"Madat"`
+					Mahns string `xml:"Mahns"`
+					Knrma string `xml:"Knrma"`
+					Gmvdt string `xml:"Gmvdt"`
+					Busab string `xml:"Busab"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknb5"`
+			TXknbk struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text         string `xml:",chardata"`
+					Mandt        string `xml:"Mandt"`
+					Kunnr        string `xml:"Kunnr"`
+					Banks        string `xml:"Banks"`
+					Bankl        string `xml:"Bankl"`
+					Bankn        string `xml:"Bankn"`
+					Bkont        string `xml:"Bkont"`
+					Bvtyp        string `xml:"Bvtyp"`
+					Xezer        string `xml:"Xezer"`
+					Bkref        string `xml:"Bkref"`
+					Koinh        string `xml:"Koinh"`
+					EbppAccname  string `xml:"EbppAccname"`
+					EbppBvstatus string `xml:"EbppBvstatus"`
+					Kovon        string `xml:"Kovon"`
+					Kobis        string `xml:"Kobis"`
+					Kz           string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknbk"`
+			TXknva struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Ablad string `xml:"Ablad"`
+					Lfdnr string `xml:"Lfdnr"`
+					Knfak string `xml:"Knfak"`
+					Wanid string `xml:"Wanid"`
+					Tpqua string `xml:"Tpqua"`
+					Tpgrp string `xml:"Tpgrp"`
+					Stzkl string `xml:"Stzkl"`
+					Stzzu string `xml:"Stzzu"`
+					Moab1 string `xml:"Moab1"`
+					Mobi1 string `xml:"Mobi1"`
+					Moab2 string `xml:"Moab2"`
+					Mobi2 string `xml:"Mobi2"`
+					Diab1 string `xml:"Diab1"`
+					Dibi1 string `xml:"Dibi1"`
+					Diab2 string `xml:"Diab2"`
+					Dibi2 string `xml:"Dibi2"`
+					Miab1 string `xml:"Miab1"`
+					Mibi1 string `xml:"Mibi1"`
+					Miab2 string `xml:"Miab2"`
+					Mibi2 string `xml:"Mibi2"`
+					Doab1 string `xml:"Doab1"`
+					Dobi1 string `xml:"Dobi1"`
+					Doab2 string `xml:"Doab2"`
+					Dobi2 string `xml:"Dobi2"`
+					Frab1 string `xml:"Frab1"`
+					Frbi1 string `xml:"Frbi1"`
+					Frab2 string `xml:"Frab2"`
+					Frbi2 string `xml:"Frbi2"`
+					Saab1 string `xml:"Saab1"`
+					Sabi1 string `xml:"Sabi1"`
+					Saab2 string `xml:"Saab2"`
+					Sabi2 string `xml:"Sabi2"`
+					Soab1 string `xml:"Soab1"`
+					Sobi1 string `xml:"Sobi1"`
+					Soab2 string `xml:"Soab2"`
+					Sobi2 string `xml:"Sobi2"`
+					Defab string `xml:"Defab"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknva"`
+			TXknvi struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Aland string `xml:"Aland"`
+					Tatyp string `xml:"Tatyp"`
+					Taxkd string `xml:"Taxkd"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknvi"`
+			TXknvk struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text    string `xml:",chardata"`
+					Mandt   string `xml:"Mandt"`
+					Parnr   string `xml:"Parnr"`
+					Kunnr   string `xml:"Kunnr"`
+					Namev   string `xml:"Namev"`
+					Name1   string `xml:"Name1"`
+					Ort01   string `xml:"Ort01"`
+					Adrnd   string `xml:"Adrnd"`
+					Adrnp   string `xml:"Adrnp"`
+					Abtpa   string `xml:"Abtpa"`
+					Abtnr   string `xml:"Abtnr"`
+					Uepar   string `xml:"Uepar"`
+					Telf1   string `xml:"Telf1"`
+					Anred   string `xml:"Anred"`
+					Pafkt   string `xml:"Pafkt"`
+					Parvo   string `xml:"Parvo"`
+					Pavip   string `xml:"Pavip"`
+					Parge   string `xml:"Parge"`
+					Parla   string `xml:"Parla"`
+					Gbdat   string `xml:"Gbdat"`
+					Vrtnr   string `xml:"Vrtnr"`
+					Bryth   string `xml:"Bryth"`
+					Akver   string `xml:"Akver"`
+					Nmail   string `xml:"Nmail"`
+					Parau   string `xml:"Parau"`
+					Parh1   string `xml:"Parh1"`
+					Parh2   string `xml:"Parh2"`
+					Parh3   string `xml:"Parh3"`
+					Parh4   string `xml:"Parh4"`
+					Parh5   string `xml:"Parh5"`
+					Moab1   string `xml:"Moab1"`
+					Mobi1   string `xml:"Mobi1"`
+					Moab2   string `xml:"Moab2"`
+					Mobi2   string `xml:"Mobi2"`
+					Diab1   string `xml:"Diab1"`
+					Dibi1   string `xml:"Dibi1"`
+					Diab2   string `xml:"Diab2"`
+					Dibi2   string `xml:"Dibi2"`
+					Miab1   string `xml:"Miab1"`
+					Mibi1   string `xml:"Mibi1"`
+					Miab2   string `xml:"Miab2"`
+					Mibi2   string `xml:"Mibi2"`
+					Doab1   string `xml:"Doab1"`
+					Dobi1   string `xml:"Dobi1"`
+					Doab2   string `xml:"Doab2"`
+					Dobi2   string `xml:"Dobi2"`
+					Frab1   string `xml:"Frab1"`
+					Frbi1   string `xml:"Frbi1"`
+					Frab2   string `xml:"Frab2"`
+					Frbi2   string `xml:"Frbi2"`
+					Saab1   string `xml:"Saab1"`
+					Sabi1   string `xml:"Sabi1"`
+					Saab2   string `xml:"Saab2"`
+					Sabi2   string `xml:"Sabi2"`
+					Soab1   string `xml:"Soab1"`
+					Sobi1   string `xml:"Sobi1"`
+					Soab2   string `xml:"Soab2"`
+					Sobi2   string `xml:"Sobi2"`
+					Pakn1   string `xml:"Pakn1"`
+					Pakn2   string `xml:"Pakn2"`
+					Pakn3   string `xml:"Pakn3"`
+					Pakn4   string `xml:"Pakn4"`
+					Pakn5   string `xml:"Pakn5"`
+					Sortl   string `xml:"Sortl"`
+					Famst   string `xml:"Famst"`
+					Spnam   string `xml:"Spnam"`
+					TitelAp string `xml:"TitelAp"`
+					Erdat   string `xml:"Erdat"`
+					Ernam   string `xml:"Ernam"`
+					Duefl   string `xml:"Duefl"`
+					Lifnr   string `xml:"Lifnr"`
+					Loevm   string `xml:"Loevm"`
+					Kzherk  string `xml:"Kzherk"`
+					Adrnp2  string `xml:"Adrnp2"`
+					Prsnr   string `xml:"Prsnr"`
+					Kz      string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknvk"`
+			TXknvp struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Vkorg string `xml:"Vkorg"`
+					Vtweg string `xml:"Vtweg"`
+					Spart string `xml:"Spart"`
+					Parvw string `xml:"Parvw"`
+					Parza string `xml:"Parza"`
+					Kunn2 string `xml:"Kunn2"`
+					Lifnr string `xml:"Lifnr"`
+					Pernr string `xml:"Pernr"`
+					Parnr string `xml:"Parnr"`
+					Knref string `xml:"Knref"`
+					Defpa string `xml:"Defpa"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TXknvp"`
+			TYknb5 struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Bukrs string `xml:"Bukrs"`
+					Maber string `xml:"Maber"`
+					Mahna string `xml:"Mahna"`
+					Mansp string `xml:"Mansp"`
+					Madat string `xml:"Madat"`
+					Mahns string `xml:"Mahns"`
+					Knrma string `xml:"Knrma"`
+					Gmvdt string `xml:"Gmvdt"`
+					Busab string `xml:"Busab"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TYknb5"`
+			TYknbk struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text         string `xml:",chardata"`
+					Mandt        string `xml:"Mandt"`
+					Kunnr        string `xml:"Kunnr"`
+					Banks        string `xml:"Banks"`
+					Bankl        string `xml:"Bankl"`
+					Bankn        string `xml:"Bankn"`
+					Bkont        string `xml:"Bkont"`
+					Bvtyp        string `xml:"Bvtyp"`
+					Xezer        string `xml:"Xezer"`
+					Bkref        string `xml:"Bkref"`
+					Koinh        string `xml:"Koinh"`
+					EbppAccname  string `xml:"EbppAccname"`
+					EbppBvstatus string `xml:"EbppBvstatus"`
+					Kovon        string `xml:"Kovon"`
+					Kobis        string `xml:"Kobis"`
+					Kz           string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TYknbk"`
+			TYknvi struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Aland string `xml:"Aland"`
+					Tatyp string `xml:"Tatyp"`
+					Taxkd string `xml:"Taxkd"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TYknvi"`
+			TYknvk struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text    string `xml:",chardata"`
+					Mandt   string `xml:"Mandt"`
+					Parnr   string `xml:"Parnr"`
+					Kunnr   string `xml:"Kunnr"`
+					Namev   string `xml:"Namev"`
+					Name1   string `xml:"Name1"`
+					Ort01   string `xml:"Ort01"`
+					Adrnd   string `xml:"Adrnd"`
+					Adrnp   string `xml:"Adrnp"`
+					Abtpa   string `xml:"Abtpa"`
+					Abtnr   string `xml:"Abtnr"`
+					Uepar   string `xml:"Uepar"`
+					Telf1   string `xml:"Telf1"`
+					Anred   string `xml:"Anred"`
+					Pafkt   string `xml:"Pafkt"`
+					Parvo   string `xml:"Parvo"`
+					Pavip   string `xml:"Pavip"`
+					Parge   string `xml:"Parge"`
+					Parla   string `xml:"Parla"`
+					Gbdat   string `xml:"Gbdat"`
+					Vrtnr   string `xml:"Vrtnr"`
+					Bryth   string `xml:"Bryth"`
+					Akver   string `xml:"Akver"`
+					Nmail   string `xml:"Nmail"`
+					Parau   string `xml:"Parau"`
+					Parh1   string `xml:"Parh1"`
+					Parh2   string `xml:"Parh2"`
+					Parh3   string `xml:"Parh3"`
+					Parh4   string `xml:"Parh4"`
+					Parh5   string `xml:"Parh5"`
+					Moab1   string `xml:"Moab1"`
+					Mobi1   string `xml:"Mobi1"`
+					Moab2   string `xml:"Moab2"`
+					Mobi2   string `xml:"Mobi2"`
+					Diab1   string `xml:"Diab1"`
+					Dibi1   string `xml:"Dibi1"`
+					Diab2   string `xml:"Diab2"`
+					Dibi2   string `xml:"Dibi2"`
+					Miab1   string `xml:"Miab1"`
+					Mibi1   string `xml:"Mibi1"`
+					Miab2   string `xml:"Miab2"`
+					Mibi2   string `xml:"Mibi2"`
+					Doab1   string `xml:"Doab1"`
+					Dobi1   string `xml:"Dobi1"`
+					Doab2   string `xml:"Doab2"`
+					Dobi2   string `xml:"Dobi2"`
+					Frab1   string `xml:"Frab1"`
+					Frbi1   string `xml:"Frbi1"`
+					Frab2   string `xml:"Frab2"`
+					Frbi2   string `xml:"Frbi2"`
+					Saab1   string `xml:"Saab1"`
+					Sabi1   string `xml:"Sabi1"`
+					Saab2   string `xml:"Saab2"`
+					Sabi2   string `xml:"Sabi2"`
+					Soab1   string `xml:"Soab1"`
+					Sobi1   string `xml:"Sobi1"`
+					Soab2   string `xml:"Soab2"`
+					Sobi2   string `xml:"Sobi2"`
+					Pakn1   string `xml:"Pakn1"`
+					Pakn2   string `xml:"Pakn2"`
+					Pakn3   string `xml:"Pakn3"`
+					Pakn4   string `xml:"Pakn4"`
+					Pakn5   string `xml:"Pakn5"`
+					Sortl   string `xml:"Sortl"`
+					Famst   string `xml:"Famst"`
+					Spnam   string `xml:"Spnam"`
+					TitelAp string `xml:"TitelAp"`
+					Erdat   string `xml:"Erdat"`
+					Ernam   string `xml:"Ernam"`
+					Duefl   string `xml:"Duefl"`
+					Lifnr   string `xml:"Lifnr"`
+					Loevm   string `xml:"Loevm"`
+					Kzherk  string `xml:"Kzherk"`
+					Adrnp2  string `xml:"Adrnp2"`
+					Prsnr   string `xml:"Prsnr"`
+					Kz      string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TYknvk"`
+			TYknvp struct {
+				Text string `xml:",chardata"`
+				Item struct {
+					Text  string `xml:",chardata"`
+					Mandt string `xml:"Mandt"`
+					Kunnr string `xml:"Kunnr"`
+					Vkorg string `xml:"Vkorg"`
+					Vtweg string `xml:"Vtweg"`
+					Spart string `xml:"Spart"`
+					Parvw string `xml:"Parvw"`
+					Parza string `xml:"Parza"`
+					Kunn2 string `xml:"Kunn2"`
+					Lifnr string `xml:"Lifnr"`
+					Pernr string `xml:"Pernr"`
+					Parnr string `xml:"Parnr"`
+					Knref string `xml:"Knref"`
+					Defpa string `xml:"Defpa"`
+					Kz    string `xml:"Kz"`
+				} `xml:"item"`
+			} `xml:"TYknvp"`
+		} `xml:"Zsdb2cCreaclieResponse"`
+	} `xml:"Body"`
+}
 
-type ClientResponse struct {
-	XMLName xml.Name     `xml:"Envelope"`
-	Body    BodyResponse `xml:"Body"`
-}
-type HeaderResponse struct {
-}
-type BodyResponse struct {
-	XMLName     xml.Name
-	GetResponse []Response `xml:"ZFM_WS_CONSULTACLIENTEResponse"`
-}
-type Response struct {
-	OUTPUT ItemBody `xml:"OUTPUT"`
-}
-type ItemBody struct {
-	Item itemStok `xml:"item"`
-}
-type itemStok struct {
-	KTOKD string `xml:"KTOKD"`
-	VKORG string `xml:"VKORG"`
-	VTWEG string `xml:"VTWEG"`
-
-	BZIRK string `xml:"BZIRK"`
-	KDGRP string `xml:"KDGRP"`
-	SPART string `xml:"SPART"`
-}
-
+/*
 func main() {
 	ws := "http://srv-hcq-a-qa.industria.chaide.com:1080/sap/bc/srt/rfc/sap/zwssdb2ccreacli/300/zwssdb2ccreacli/zwssdb2ccreacli"
 	action := "urn:sap-com:document:sap:soap:functions:mc-style:ZWSSDB2CCREACLI:Zsdb2cCreaclieRequest"
@@ -809,7 +1157,7 @@ func main() {
 
 	Soap, _ := CreateClientSOAP(ws, action, ci)
 
-	res := &ClientResponse{}
+	res := &CreateClientResponse{}
 	err := xml.Unmarshal(Soap, res)
 	fmt.Println(res)
 	// fmt.Println(res.Body.GetResponse)
@@ -818,3 +1166,4 @@ func main() {
 	}
 	// fmt.Println(res.Body.GetResponse)
 }
+*/

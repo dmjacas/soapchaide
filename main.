@@ -1,27 +1,27 @@
-package soapchaide
+package main
 
 import (
 	"bytes"
 	"crypto/tls"
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
 
 type PedidoRequest struct {
-	XMLName xml.Name          `xml:"soapenv:Envelope"`
-	Text    string            `xml:",chardata"`
-	Soapenv string            `xml:"xmlns:soapenv,attr"`
-	URN     string            `xml:"xmlns:urn,attr"`
-	Header  string            `xml:"soapenv:Header"`
-	Body    BodyPedidoRequest `xml:"soapenv:Body"`
+	XMLName xml.Name   `xml:"Envelope"`
+	Text    string     `xml:",chardata"`
+	Soapenv string     `xml:"soapenv,attr"`
+	URN     string     `xml:"urn,attr"`
+	Body    PedidoBody `xml:"Body"`
 }
 
-type BodyPedidoRequest struct {
-	Zsdb2Creaped Zsdb2Creaped `xml:"urn:Zsdb2Creaped"`
+type PedidoBody struct {
+	Text         string       `xml:",chardata"`
+	Zsdb2Creaped Zsdb2Creaped `xml:"Zsdb2Creaped"`
 }
-
 type Zsdb2Creaped struct {
 	Text      string    `xml:",chardata"`
 	Auart     string    `xml:"Auart"`
@@ -34,16 +34,15 @@ type Zsdb2Creaped struct {
 	Spart     string    `xml:"Spart"`
 	Vkogr     string    `xml:"Vkogr"`
 	Vtweg     string    `xml:"Vtweg"`
-	Zsdb2Item Zsdb2Item `xml:"Zsdb2Item"`
 	Zterm     string    `xml:"Zterm"`
+	Zsdb2Item Zsdb2Item `xml:"Zsdb2Item"`
 }
-
 type Zsdb2Item struct {
-	Text string              `xml:",chardata"`
-	Item []PedidoItemRequest `xml:"item"`
+	Text string       `xml:",chardata"`
+	Item []PedidoItem `xml:"item"`
 }
 
-type PedidoItemRequest struct {
+type PedidoItem struct {
 	Text   string `xml:",chardata"`
 	Mandt  string `xml:"Mandt"`
 	Posnr  string `xml:"Posnr"`
@@ -61,7 +60,7 @@ func PedidoSOAPCall(ws string, action string, par Zsdb2Creaped) ([]byte, error) 
 	v := PedidoRequest{
 		Soapenv: "http://schemas.xmlsoap.org/soap/envelope/",
 		URN:     "urn:sap-com:document:sap:soap:functions:mc-style",
-		Body: BodyPedidoRequest{
+		Body: PedidoBody{
 			Zsdb2Creaped: par,
 		},
 	}
@@ -97,6 +96,8 @@ func PedidoSOAPCall(ws string, action string, par Zsdb2Creaped) ([]byte, error) 
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(string(bodyBytes))
+
 	defer response.Body.Close()
 	return bodyBytes, nil
 }
@@ -135,4 +136,68 @@ type PedidoResponse struct {
 			} `xml:"Zsdb2Item"`
 		} `xml:"Zsdb2CreapedResponse"`
 	} `xml:"Body"`
+}
+
+func main() {
+
+	ws := "http://srv-hcq-a-qa.industria.chaide.com:1080/sap/bc/srt/rfc/sap/zwssdb2bcreaped/300/zwssdb2bcreaped/zwssdb2bcreaped"
+	action := "urn:sap-com:document:sap:soap:functions:mc-style:ZWSSDB2BCREAPED:Zsdb2CreapedRequest"
+	items1 := PedidoItem{
+		Mandt:  "300",
+		Posnr:  "1",
+		Matnr:  "20001679",
+		Kwmeng: "1",
+		Pstyv:  "TAN",
+		Kunnr:  "0005000020",
+		Etdat:  "10102019",
+		Kwert:  "",
+		Abgru:  "",
+	}
+	items2 := PedidoItem{
+		Mandt:  "300",
+		Posnr:  "1",
+		Matnr:  "20001679",
+		Kwmeng: "1",
+		Pstyv:  "TAN",
+		Kunnr:  "0005000020",
+		Etdat:  "10102019",
+		Kwert:  "",
+		Abgru:  "",
+	}
+	subItems := []PedidoItem{items1, items2}
+
+	Zsdb2Item := Zsdb2Item{Item: subItems}
+	data := Zsdb2Creaped{
+		Auart:     "ZTA1",
+		Augru:     "001",
+		Erdat:     "10102019",
+		Kunnr:     "0005000020",
+		Kunnr1:    "0005000020",
+		PurchNoC:  "",
+		PurchNoS:  "",
+		Spart:     "00",
+		Vkogr:     "1000",
+		Vtweg:     "03",
+		Zterm:     "DT02",
+		Zsdb2Item: Zsdb2Item,
+	}
+
+	v := PedidoRequest{
+		Soapenv: "http://schemas.xmlsoap.org/soap/envelope/",
+		URN:     "urn:sap-com:document:sap:soap:functions:mc-style",
+		Body: PedidoBody{
+			Zsdb2Creaped: data,
+		},
+	}
+	payload, _ := xml.MarshalIndent(v, "", "  ")
+
+	fmt.Println(string(payload))
+
+	Soap, _ := PedidoSOAPCall(ws, action, data)
+	res := &PedidoResponse{}
+	err := xml.Unmarshal(Soap, res)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(res)
 }

@@ -105,20 +105,6 @@ type PiKnvv struct {
 	bev1emlgforts string `xml:"bev1emlgforts,omitempty"`
 }
 
-func soapCallHandleResponse(ws, action string, par ExtiendeClienteBody, result interface{}) error {
-	body, err := ExtiendeClienteSOA(ws, action, par)
-	if err != nil {
-		return err
-	}
-
-	err = xml.Unmarshal(body, &result)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func ExtiendeClienteSOA(ws string, action string, data ExtiendeClienteBody) ([]byte, error) {
 	v := ExtiendeClienteHeader{
 		XMLNsSoap: "http://schemas.xmlsoap.org/soap/envelope/",
@@ -163,30 +149,8 @@ func ExtiendeClienteSOA(ws string, action string, data ExtiendeClienteBody) ([]b
 
 /****/
 
-type ClientResponse struct {
-	XMLName xml.Name     `xml:"Envelope"`
-	Body    BodyResponse `xml:"Body"`
-}
-type HeaderResponse struct {
-}
-type BodyResponse struct {
-	XMLName     xml.Name
-	GetResponse []Response `xml:"ZFM_WS_CONSULTACLIENTEResponse"`
-}
-type Response struct {
-	OUTPUT ItemBody `xml:"OUTPUT"`
-}
-type ItemBody struct {
-	Item itemStok `xml:"item"`
-}
-type itemStok struct {
-	KTOKD string `xml:"KTOKD"`
-	VKORG string `xml:"VKORG"`
-	VTWEG string `xml:"VTWEG"`
-
-	BZIRK string `xml:"BZIRK"`
-	KDGRP string `xml:"KDGRP"`
-	SPART string `xml:"SPART"`
+type ExtiendeClienteResponse struct {
+	XMLName xml.Name `xml:"Envelope"`
 }
 
 func main() {
@@ -221,9 +185,9 @@ func main() {
 
 	Soap, _ := ExtiendeClienteSOA(ws, action, data)
 
-	res := &ClientResponse{}
+	res := &ExtiendeClienteResponse{}
 	err := xml.Unmarshal(Soap, res)
-	fmt.Println(res.Body.GetResponse)
+	fmt.Println(res)
 	// fmt.Println(res.Body.GetResponse)
 	if err != nil {
 		fmt.Println(err)
